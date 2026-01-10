@@ -46,7 +46,7 @@ export class Counting {
         if (message.id != this.#last_msg?.id) return;
 
         if (this.#trapped_by) {
-          // TODO: give the person his money back
+          await addCoins(this.#trapped_by, this.#getTrapCost());
         }
 
         await this.#getLastNumber();
@@ -59,7 +59,7 @@ export class Counting {
     await message.react("✅");
 
     if (this.#trapped_by) {
-      // TODO: add 20% to the person that counted
+      await addCoins(message.author.id, this.#getTrapCost() * 2);
     }
 
     this.#last_number! += dir;
@@ -76,7 +76,7 @@ export class Counting {
     );
 
     if (this.#trapped_by) {
-      // TODO: add 20% to the person that trapped
+      await addCoins(this.#trapped_by, this.#getTrapCost() * 2);
     }
 
     this.#last_number = 0;
@@ -140,8 +140,8 @@ export class Counting {
       )
         return;
 
-      // if (this.#last_counter_id == message.author.id)
-      //   return await message.reply("WHY R U COUNTING TWICE STUPID");
+      if (this.#last_counter_id == message.author.id)
+        return await message.reply("WHY R U COUNTING TWICE STUPID");
 
       this.#last_counter_id = message.author.id;
 
@@ -359,5 +359,9 @@ export class Counting {
     } finally {
       release();
     }
+  }
+
+  #getTrapCost() {
+    return Math.floor(this.#last_number! / 10);
   }
 }
