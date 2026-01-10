@@ -1,10 +1,7 @@
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 
-const connectionString = `${process.env.DATABASE_URL}`;
-const adapter = new PrismaBetterSqlite3({ url: connectionString });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient();
 
 export const addCoins = async (id: string, amount: number) => {
   await prisma.user.upsert({
