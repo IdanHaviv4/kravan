@@ -20,7 +20,7 @@ enum COUNT_EVENT {
 type MessageT = OmitPartialGroupDMChannel<Message<boolean>>;
 
 export class Counting {
-  static COUNTING_CHANNEL_ID = "1455624177506844773";
+  static COUNTING_CHANNEL_ID = "1236751657086484587";
 
   #last_number: number | null;
   #event: COUNT_EVENT | null;

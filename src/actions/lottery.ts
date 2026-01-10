@@ -23,8 +23,8 @@ type QuestionT = {
 // https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzl1cWZneGkxMmJoZzdxd2RjNGY1YTZsNHVucmJhdzNxdDY0aDE0eCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TVfeiWmO42MLH63ONT/giphy.gif - gif for answers
 
 export class Lottery {
-  static ANNOUNCEMENTS_CHANNEL_ID = "1459180131762569411";
-  static LOTTERY_CHANNEL_ID = "1455614954487943375";
+  static ANNOUNCEMENTS_CHANNEL_ID = "1311121693133246535";
+  static LOTTERY_CHANNEL_ID = "1459659790417399960";
   static COST = 5;
 
   #question: QuestionT | null;
