@@ -32,7 +32,7 @@ export class Leveling {
       if (isNaN(new_level)) return;
 
       const target_id = message.mentions.users.at(0)!.id;
-      const reward = Math.max(Math.floor(new_level / 10), 1);
+      const reward = Math.max(Math.floor((new_level * 3) / 10), 1);
 
       await addCoins(target_id, reward);
 
