@@ -68,11 +68,11 @@ export class Gamble {
 
     let msg;
 
-    for (let i = 0; i <= this.#sequence.length; i++) {
+    while (this.#revealed < this.#sequence.length) {
       msg = await this.#interaction.editReply({
-        content: `${this.#sequence.slice(0, i).join(" ")} ${new Array(
-          this.#sequence.length - i
-        )
+        content: `${this.#sequence
+          .slice(0, this.#revealed)
+          .join(" ")} ${new Array(this.#sequence.length - this.#revealed)
           .fill("❓")
           .join(" ")}`,
         embeds: [
@@ -108,8 +108,6 @@ export class Gamble {
         ],
       });
 
-      if (i == this.#sequence.length) break;
-
       if (!(await this.#checkRevealClicked(msg))) return;
     }
 
@@ -130,9 +128,7 @@ export class Gamble {
       });
       interaction.deferUpdate();
 
-      console.log(interaction.id);
-
-      if (interaction.id == "next") this.#revealed++;
+      if (interaction.customId == "next") this.#revealed++;
       else this.#revealed = this.#sequence.length;
 
       return true;
