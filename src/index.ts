@@ -121,19 +121,23 @@ const commands = [
         .setRequired(true)
     ),
 ].map((cmd) => cmd.toJSON());
+const guilds = [TEST_GUILD_ID, RANNI_GUILD_ID];
 
 const rest = new REST({ version: "10" }).setToken(TOKEN);
 
 const isGuildValid = (guild: Guild) => {
-  return [TEST_GUILD_ID, RANNI_GUILD_ID].includes(guild.id);
+  return guilds.includes(guild.id);
 };
 
 (async () => {
   try {
     console.log("Registering slash command...");
-    await rest.put(Routes.applicationCommands(CLIENT_ID), {
-      body: commands,
-    });
+
+    for (const guild of guilds)
+      await rest.put(Routes.applicationGuildCommands(CLIENT_ID, guild), {
+        body: commands,
+      });
+
     console.log("Slash command registered.");
   } catch (error) {
     console.error(error);
