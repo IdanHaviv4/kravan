@@ -153,8 +153,11 @@ export class Counting {
       )
         return;
 
-      if (this.#last_counter_id == message.author.id)
+      if (this.#last_counter_id == message.author.id && !this.#trapped_by)
         return await message.reply("WHY R U COUNTING TWICE STUPID");
+
+      if (this.#trapped_by == message.author.id)
+        return await message.reply("U TRAPPED U CANT GUESS IT");
 
       this.#last_counter_id = message.author.id;
 
