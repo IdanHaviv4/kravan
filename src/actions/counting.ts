@@ -324,7 +324,7 @@ export class Counting {
 
   async #trap(interaction: ChatInputCommandInteraction<CacheType>) {
     await this.#lock(async () => {
-      const cost = Math.floor(this.#last_number! / 10);
+      const cost = this.#getTrapCost();
 
       if (!this.#last_counter_id)
         return await interaction.reply("COUNTING SEQUENCE MUST BEGIN FIRST");
@@ -332,7 +332,7 @@ export class Counting {
       if (this.#trapped_by)
         return await interaction.reply("NUMBER IS ALREADY TRAPPED");
 
-      if (cost <= 0)
+      if (Math.abs(this.#last_number!) < 10)
         return await interaction.reply("U CAN TRAP ONLY AFTER COUNTING TO 10");
 
       if ((await getUserCoins(interaction.user.id)) < cost)
@@ -375,6 +375,6 @@ export class Counting {
   }
 
   #getTrapCost() {
-    return Math.floor(this.#last_number! / 5);
+    return Math.floor(Math.abs(this.#last_number!) / 5);
   }
 }
