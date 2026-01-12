@@ -10,7 +10,12 @@ import {
 } from "discord.js";
 import { Counting } from "./actions/counting.js";
 import { Duel } from "./actions/duel.js";
-import { getTop5Richest, getUserCoins } from "./db/prisma.js";
+import {
+  addCoins,
+  getTop5Richest,
+  getUserCoins,
+  takeCoins,
+} from "./db/prisma.js";
 import { Gamble } from "./actions/gamble.js";
 import { Lottery } from "./actions/lottery.js";
 import { CustomEmbed } from "./utils/embed.js";
@@ -96,6 +101,23 @@ const commands = [
       option
         .setName("answer")
         .setDescription("Your answer to the question")
+        .setRequired(true)
+    ),
+
+  new SlashCommandBuilder()
+    .setName("donate")
+    .setDescription("People are desperate around here...")
+    .addUserOption((option) =>
+      option
+        .setName("target")
+        .setDescription("mention the person u wanna donate to")
+        .setRequired(true)
+    )
+    .addNumberOption((option) =>
+      option
+        .setName("amount")
+        .setDescription("The amount you want to donate")
+        .setMinValue(1)
         .setRequired(true)
     ),
 ].map((cmd) => cmd.toJSON());
@@ -312,6 +334,32 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       });
 
       break;
+
+    case "donate": {
+      const from = interaction.user;
+      const to = interaction.options.getUser("target", true);
+      const amount = interaction.options.getNumber("amount", true);
+
+      if (from.id == to.id || to.bot) return;
+
+      if ((await getUserCoins(from.id)) < amount)
+        return await interaction.reply(
+          "Thats very sweet, but u cant afford donating this much :("
+        );
+
+      await takeCoins(from.id, amount);
+      await addCoins(to.id, amount);
+
+      await interaction.reply(
+        `WOW YOU ARE SO SWEET ${userMention(from.id)}! ${
+          from.displayName
+        } gave ${userMention(
+          to.id
+        )} ${amount} coins 🪙\n\n(Exucse me im gonna tear up 🥹)`
+      );
+
+      break;
+    }
   }
 });
 
