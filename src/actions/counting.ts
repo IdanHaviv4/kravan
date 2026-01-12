@@ -375,6 +375,6 @@ export class Counting {
   }
 
   #getTrapCost() {
-    return Math.floor(this.#last_number! / 10);
+    return Math.floor(this.#last_number! / 5);
   }
 }
