@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "daily" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "last_date" TIMESTAMP(3);
