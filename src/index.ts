@@ -410,7 +410,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
       if ((await getUserCoins(target.id)) <= 0) return;
 
-      if (await updateTheft(interaction.user.id)) return;
+      if (!(await updateTheft(interaction.user.id))) return;
 
       new Steal(interaction.user, target, interaction);
     }
