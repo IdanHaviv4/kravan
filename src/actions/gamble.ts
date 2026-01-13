@@ -10,6 +10,7 @@ import {
 import { addCoins, getUserCoins, takeCoins } from "../db/prisma.js";
 import { getRandomFromArray } from "../utils/helpers.js";
 import { CustomEmbed } from "../utils/embed.js";
+import { current_gambles } from "../index.js";
 
 type InteractionT = ChatInputCommandInteraction<CacheType>;
 
@@ -108,7 +109,8 @@ export class Gamble {
         ],
       });
 
-      if (!(await this.#checkRevealClicked(msg))) return;
+      if (!(await this.#checkRevealClicked(msg)))
+        return current_gambles.delete(this.#interaction.user.id);
     }
 
     await new Promise((res, _) => {
@@ -118,6 +120,8 @@ export class Gamble {
     });
 
     await this.#sendResults();
+
+    current_gambles.delete(this.#interaction.user.id);
   }
 
   async #checkRevealClicked(msg: Message<boolean>) {

@@ -40,7 +40,7 @@ export const client = new Client({
   ],
 });
 
-const current_gambles: Map<string, Gamble> = new Map();
+export const current_gambles: Map<string, Gamble> = new Map();
 
 const commands = [
   new SlashCommandBuilder()
