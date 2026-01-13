@@ -80,13 +80,13 @@ export class Lottery {
           // already entered the lottery
           if (this.#entries.has(interaction.user.id)) return;
 
-          if ((await getUserCoins(interaction.user.id)) < Lottery.COST) return;
+          // if ((await getUserCoins(interaction.user.id)) < Lottery.COST) return;
 
           this.#entries.set(interaction.user.id, value);
 
           await interaction.reply("Adding you to the lottery...");
 
-          await takeCoins(interaction.user.id, Lottery.COST);
+          // await takeCoins(interaction.user.id, Lottery.COST);
           await this.#sendQuestion();
 
           await interaction.deleteReply();
