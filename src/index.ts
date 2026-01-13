@@ -378,6 +378,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
           "U ALREADY CLAIMED TODAYS REWARD U GREEDY MF"
         );
 
+      await addCoins(interaction.user.id, result);
+
       return await interaction.reply(
         `NICE! Streak is now ${result} days 🔥 You got +${result} coins 🪙`
       );
