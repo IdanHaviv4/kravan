@@ -9,6 +9,7 @@ import {
 import { client } from "../index.js";
 import { addCoins, getUserCoins, takeCoins } from "../db/prisma.js";
 import { getRandomFromArray } from "../utils/helpers.js";
+import { CustomEmbed } from "../utils/embed.js";
 
 export class Steal {
   static CHANNELS_IDS = [
@@ -80,24 +81,48 @@ export class Steal {
 
       await response.first()?.delete();
 
-      await this.#msg?.edit(
-        `NICE ${userMention(this.#victim.id)}!! YOU CAUGHT ${userMention(
-          this.#theif.id
-        )} THINKING HE IS SLICK WITH IT PFFFFF\n\n${
-          this.#theif.displayName
-        } gets fined with 10 coins for attempting to steal, its not nice... 😠\n\nhttps://images-ext-1.discordapp.net/external/vkwVn-co6EfwnR4CXyge4K0X3dgRlWB99NdzjGRiktA/https/media.tenor.com/E4nvGmkDP7MAAAPo/cbb2-cbbus2.mp4`
-      );
+      await this.#msg?.edit({
+        content: "",
+        embeds: [
+          new CustomEmbed()
+            .setColor(0xf29411)
+            .setDescription(
+              `NICE ${userMention(this.#victim.id)}!! YOU CAUGHT ${userMention(
+                this.#theif.id
+              )} THINKING HE IS SLICK WITH IT PFFFFF\n\n${
+                this.#theif.displayName
+              } gets fined with 10 coins for attempting to steal, its not nice... 😠`
+            )
+            .setThumbnail(this.#theif.avatarURL())
+            .setImage(
+              "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYW1jNXFqYmE4NTFiNW4xeG9hMjllMmdhYTU2eGJkdDJ2c2J4MDJ5NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oohqHb5EbWKHypBtdh/giphy.gif"
+            ),
+        ],
+      });
 
       await takeCoins(this.#theif.id, 10);
     } catch {
       if (Math.floor(Math.random() * 2) <= 0) {
-        await this.#msg?.edit(
-          `CCTV CAMS CAUGHT ${userMention(
-            this.#theif.id
-          )} ON 4K RUNNING WITH ${userMention(this.#victim.id)}'S MONEY!!\n\n${
-            this.#theif.displayName
-          } gets fined with 10 coins for attempting to steal, its not nice... 😠\n\nhttps://images-ext-1.discordapp.net/external/ZyzoTDgEjDVt0N-rmiydGRvVNqKjf6BOQ-IUPln5A08/https/media.tenor.com/QgVeRoMC43MAAAPo/caught-you-in4k.mp4`
-        );
+        await this.#msg?.edit({
+          content: "",
+          embeds: [
+            new CustomEmbed()
+              .setColor(0xf29411)
+              .setDescription(
+                `CCTV CAMS CAUGHT ${userMention(
+                  this.#theif.id
+                )} ON 4K RUNNING WITH ${userMention(
+                  this.#victim.id
+                )}'S MONEY!!\n\n${
+                  this.#theif.displayName
+                } gets fined with 10 coins for attempting to steal, its not nice... 😠`
+              )
+              .setThumbnail(this.#theif.avatarURL())
+              .setImage(
+                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaThvNWkxaGtnd2pobDljeHRnYTFjaXZtbjlzeHp3MG0yYXo2aXJwbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dLhoOYRmsJVOhKbyTK/giphy.gif"
+              ),
+          ],
+        });
 
         await takeCoins(this.#theif.id, 10);
 
@@ -114,11 +139,22 @@ export class Steal {
       await takeCoins(this.#victim.id, amount);
       await addCoins(this.#theif.id, amount);
 
-      await this.#msg?.edit(
-        `someone just stole ${amount} coins from ${userMention(
-          this.#victim.id
-        )}... 😬\n\nYou might want to consider buying an alarm 🚨 in the shop 🛍️\n\nhttps://images-ext-1.discordapp.net/external/pAbu76lFuQEgaVIC5xUpO7278v7yYJiFOwVL5hSOWE0/https/media.tenor.com/jL1f0JCmZEkAAAPo/ill-be-taking-that-spongebob.mp4`
-      );
+      await this.#msg?.edit({
+        content: "",
+        embeds: [
+          new CustomEmbed()
+            .setColor(0xf29411)
+            .setDescription(
+              `someone just stole ${amount} coins from ${userMention(
+                this.#victim.id
+              )}... 😬\n\nYou might want to consider buying an alarm 🚨 in the shop 🛍️`
+            )
+            .setThumbnail(this.#theif.avatarURL())
+            .setImage(
+              "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTFjdG1rZ2xqMmdjZDUxa3c4dTkzMjc4MzE4cTQ3b3JvMndwZzBzdiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l8vN5etR8DIoHA0qzV/giphy.gif"
+            ),
+        ],
+      });
     }
   }
 
