@@ -71,7 +71,7 @@ export const updateAndReturnDaily = async (id: string) => {
   const date = moment().utc().toDate();
 
   if (
-    user?.last_date.toLocaleDateString("en-US") ==
+    user?.last_date?.toLocaleDateString("en-US") ==
     date.toLocaleDateString("en-US")
   )
     return -1;
