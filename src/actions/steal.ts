@@ -8,14 +8,32 @@ import {
 } from "discord.js";
 import { client } from "../index.js";
 import { addCoins, getUserCoins, takeCoins } from "../db/prisma.js";
+import { getRandomFromArray } from "../utils/helpers.js";
 
 export class Steal {
-  static CHANNEL_ID = "1310738903061237820";
+  static CHANNELS_IDS = [
+    "1310738903061237820",
+    "1336326581915881593",
+    "1310737786843824278",
+    "1387347858835116042",
+    "1386878625290256516",
+    "1393182802601578536",
+    "1311104580628647939",
+    "1310737761275478036",
+    "1428100416784044174",
+    "1388117861658267718",
+    "1446229960741228647",
+    "1236751657086484587",
+    "1459659790417399960",
+    "1310738903061237820",
+    "1386937305855426671",
+  ];
 
   #theif: User;
   #victim: User;
   #interaction: ChatInputCommandInteraction<CacheType>;
   #msg: Message<boolean> | null;
+  #channel_id: string;
 
   constructor(
     theif: User,
@@ -26,6 +44,7 @@ export class Steal {
     this.#victim = victim;
     this.#interaction = interaction;
     this.#msg = null;
+    this.#channel_id = getRandomFromArray(Steal.CHANNELS_IDS);
 
     (async () => {
       await this.#sendMsg();
@@ -104,6 +123,6 @@ export class Steal {
   }
 
   #getChannel() {
-    return client.channels.cache.get(Steal.CHANNEL_ID) as TextChannel;
+    return client.channels.cache.get(this.#channel_id) as TextChannel;
   }
 }
