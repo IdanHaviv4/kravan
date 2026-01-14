@@ -63,6 +63,11 @@ export class Counting {
     await message.react("✅");
 
     if (this.#trapped_by) {
+      await message.reply(
+        `NICE ${userMention(
+          message.author.id
+        )}! You overcame the trap and got ${this.#getTrapCost() * 2} coins 🪙`
+      );
       await addCoins(message.author.id, this.#getTrapCost() * 2);
     }
 
@@ -130,7 +135,9 @@ export class Counting {
     await this.#wrong(
       message,
       this.#trapped_by
-        ? `DAMN U FELL FOR THE TRAP U SUCK`
+        ? `DAMN U FELL FOR THE TRAP U SUCK\n${userMention(
+            this.#trapped_by
+          )} got +${this.#getTrapCost() * 2} coins 🪙`
         : `BRO LIKE WHO DOESNT KNOW ITS ${next_val} U SUCK`
     );
 
