@@ -24,6 +24,7 @@ import { CustomEmbed } from "./utils/embed.js";
 import { Leveling } from "./actions/leveling.js";
 import { configDotenv } from "dotenv";
 import { Steal } from "./actions/steal.js";
+import { Store } from "./actions/store.js";
 
 configDotenv();
 
@@ -141,6 +142,10 @@ const commands = [
         .setDescription("mention the person u wanna borrow from")
         .setRequired(true)
     ),
+
+    new SlashCommandBuilder().setName("store").setDescription("Display the shop"),
+
+    new SlashCommandBuilder().setName("buy").setDescription("Buy something from the shop").addNumberOption((option) => option.setName("value").setDescription("The value of the item").setMinValue(1).setRequired(true))
 ].map((cmd) => cmd.toJSON());
 const guilds = [TEST_GUILD_ID, RANNI_GUILD_ID];
 
@@ -413,6 +418,31 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       if (!(await updateTheft(interaction.user.id))) return;
 
       new Steal(interaction.user, target, interaction);
+    }
+
+    case "store":
+      await interaction.reply({
+        embeds: [
+          Store.getStoreEmbed()
+        ]
+      })
+
+      break;
+
+    case "buy": {
+      const value = interaction.options.getNumber("value", true);
+
+      const item = Store.ITEMS.at(value - 1);
+
+      if (!item)
+        return await interaction.reply("INVALID ITEM VALUE");
+
+      if ((await getUserCoins(interaction.user.id)) < item.amount)
+        return await interaction.reply("U TOO BROKE TO BUY DIS")
+
+      await takeCoins(interaction.user.id, item.amount);
+
+      // TODO: add item to db
     }
   }
 });
