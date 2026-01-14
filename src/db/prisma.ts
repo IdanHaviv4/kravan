@@ -176,7 +176,7 @@ export const useItem = async (id: string, value: number) => {
 
   if (!existing?.items.includes(value)) return false;
 
-  existing.items.splice(existing.items.find((el) => el == value)!, 1);
+  existing.items.splice(existing.items.findIndex((el) => el == value)!, 1);
 
   await prisma.user.update({
     data: {

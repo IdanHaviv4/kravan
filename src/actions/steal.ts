@@ -57,11 +57,13 @@ export class Steal {
   async #sendMsg() {
     await this.#interaction.reply("Loading...");
 
+    const end_time = new Date().valueOf() / 1000 + 10 * 60;
+
     if (await useItem(this.#victim.id, ItemId.ALARM)) {
       this.#msg = await this.#getChannel().send(
         `BROOOO ${userMention(
           this.#victim.id
-        )} WAKE UPPPPP SOMEONE IS TRYING TO STEAL FROM UUUUUUU\n\n${userMention(
+        )} WAKE UPPPPP SOMEONE IS TRYING TO STEAL FROM UUUUUUU\nREPLY TO THIS MESSAGE WITHIN <t:${end_time}:R> TO CATCH THE MF\n\n${userMention(
           this.#victim.id
         )} ${userMention(this.#victim.id)} ${userMention(this.#victim.id)}`
       );
@@ -72,7 +74,7 @@ export class Steal {
       this.#msg = await this.#getChannel().send(
         `Someone is sneaking into ${this.#victim.displayName}'s place. if u r ${
           this.#victim.displayName
-        }, reply to this message to catch the filthy theif...`
+        }, reply to this message within <t:${end_time}:R> to catch the filthy theif...`
       );
 
     await this.#interaction.deleteReply();
