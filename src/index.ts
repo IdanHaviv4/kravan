@@ -428,6 +428,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       if (!(await updateTheft(interaction.user.id))) return;
 
       new Steal(interaction.user, target, interaction);
+
+      break;
     }
 
     case "store":
