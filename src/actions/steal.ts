@@ -57,7 +57,7 @@ export class Steal {
   async #sendMsg() {
     await this.#interaction.reply("Loading...");
 
-    const end_time = new Date().valueOf() / 1000 + 10 * 60;
+    const end_time = Math.floor(new Date().valueOf() / 1000 + 10 * 60);
 
     if (await useItem(this.#victim.id, ItemId.ALARM)) {
       this.#msg = await this.#getChannel().send(
