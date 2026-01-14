@@ -136,4 +136,60 @@ export const updateTheft = async (id: string) => {
   return true;
 };
 
+export const addItem = async (id: string, value: number) => {
+  const existing = await prisma.user.findUnique({
+    select: {
+      items: true,
+    },
+    where: {
+      id,
+    },
+  });
+
+  await prisma.user.upsert({
+    create: {
+      id,
+      items: {
+        set: [value],
+      },
+    },
+    update: {
+      items: {
+        set: [...(existing?.items ?? []), value],
+      },
+    },
+    where: {
+      id,
+    },
+  });
+};
+
+export const useItem = async (id: string, value: number) => {
+  const existing = await prisma.user.findUnique({
+    select: {
+      items: true,
+    },
+    where: {
+      id,
+    },
+  });
+
+  if (!existing?.items.includes(value)) return false;
+
+  existing.items.splice(existing.items.find((el) => el == value)!, 1);
+
+  await prisma.user.update({
+    data: {
+      items: {
+        set: existing.items,
+      },
+    },
+    where: {
+      id,
+    },
+  });
+
+  return true;
+};
+
 export { prisma };

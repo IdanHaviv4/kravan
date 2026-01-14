@@ -12,4 +12,5 @@ model User {
   daily Int @default(0)
   last_date DateTime?
   last_theft DateTime?
+  items Int[] @default([])
 }

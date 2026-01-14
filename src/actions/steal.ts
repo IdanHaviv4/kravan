@@ -7,9 +7,10 @@ import {
   userMention,
 } from "discord.js";
 import { client } from "../index.js";
-import { addCoins, getUserCoins, takeCoins } from "../db/prisma.js";
+import { addCoins, getUserCoins, takeCoins, useItem } from "../db/prisma.js";
 import { getRandomFromArray } from "../utils/helpers.js";
 import { CustomEmbed } from "../utils/embed.js";
+import { ItemId } from "./store.js";
 
 export class Steal {
   static CHANNELS_IDS = [
@@ -54,15 +55,25 @@ export class Steal {
   }
 
   async #sendMsg() {
-    // TODO: send a new message with the victim's mention if he has an alarm
-
     await this.#interaction.reply("Loading...");
 
-    this.#msg = await this.#getChannel().send(
-      `Someone is sneaking into ${this.#victim.displayName}'s place. if u r ${
-        this.#victim.displayName
-      }, reply to this message to catch the filthy theif...`
-    );
+    if (await useItem(this.#victim.id, ItemId.ALARM)) {
+      this.#msg = await this.#getChannel().send(
+        `BROOOO ${userMention(
+          this.#victim.id
+        )} WAKE UPPPPP SOMEONE IS TRYING TO STEAL FROM UUUUUUU\n\n${userMention(
+          this.#victim.id
+        )} ${userMention(this.#victim.id)} ${userMention(this.#victim.id)}`
+      );
+      await this.#getChannel().send(
+        "https://tenor.com/view/haintz-gif-24744086"
+      );
+    } else
+      this.#msg = await this.#getChannel().send(
+        `Someone is sneaking into ${this.#victim.displayName}'s place. if u r ${
+          this.#victim.displayName
+        }, reply to this message to catch the filthy theif...`
+      );
 
     await this.#interaction.deleteReply();
   }
@@ -132,7 +143,8 @@ export class Steal {
       const full_victim_amount = await getUserCoins(this.#victim.id);
       const amount = Math.max(
         Math.floor(
-          Math.random() * (full_victim_amount / 16 + 1) + full_victim_amount / 16
+          Math.random() * (full_victim_amount / 16 + 1) +
+            full_victim_amount / 16
         ),
         1
       );
