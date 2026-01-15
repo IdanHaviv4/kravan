@@ -109,8 +109,7 @@ export class Gamble {
         ],
       });
 
-      if (!(await this.#checkRevealClicked(msg)))
-        return current_gambles.delete(this.#interaction.user.id);
+      if (!(await this.#checkRevealClicked(msg))) break;
     }
 
     await new Promise((res, _) => {
@@ -137,14 +136,6 @@ export class Gamble {
 
       return true;
     } catch (e) {
-      await this.#interaction.editReply({
-        content: "BRO U CANT GO WHILE YOU ARE GAMBLING",
-        embeds: [],
-        components: [],
-      });
-
-      await takeCoins(this.#interaction.user.id, this.#bet);
-
       return false;
     }
   }
@@ -269,8 +260,7 @@ export class Gamble {
       },
       {
         name: "Goobie Incident 🚽",
-        description:
-          `Goobie smashed his head against the toilet... again... u donate him ${value} coins for his medication 💊`,
+        description: `Goobie smashed his head against the toilet... again... u donate him ${value} coins for his medication 💊`,
         additional: -value,
         thumbnail:
           "https://images-ext-1.discordapp.net/external/kgMjqZhFstRqlg32jZNszMxlG14L5l0wlNqcLKYlTWQ/https/cdn.discordapp.com/guilds/1236751656331509967/users/508655899309506570/avatars/7efb04f6f79659b4e9dfc1ce0454e8cc.webp?format=webp&width=141&height=141",
@@ -278,8 +268,7 @@ export class Gamble {
       },
       {
         name: "Cant sleep with sleepy 😴",
-        description:
-          `Sleepy says peek with me... you dont... you dont... he drops your wallet angrily, ${value} coins arent with us anymore.`,
+        description: `Sleepy says peek with me... you dont... you dont... he drops your wallet angrily, ${value} coins arent with us anymore.`,
         additional: -value,
         thumbnail:
           "https://cdn.discordapp.com/avatars/973969392146710568/702e0414a562e36dea4a4553b8c7e816.png",
@@ -295,8 +284,7 @@ export class Gamble {
       },
       {
         name: "Will never be the same... 😶",
-        description:
-          `Zed said type shit, you are forced to play a game of league with him, you lost all your sanity and you are sent to an insistuation. You pay ${value} coins for a psychology session.`,
+        description: `Zed said type shit, you are forced to play a game of league with him, you lost all your sanity and you are sent to an insistuation. You pay ${value} coins for a psychology session.`,
         additional: -value,
         thumbnail:
           "https://images-ext-1.discordapp.net/external/wN38Q6t1nHa0xXycCaJqBUyVNcdIYF22Ggo7H2WeHSg/https/cdn.discordapp.com/avatars/133282052350017536/3dc22cb19049d7b675c9365f224cd565.webp?format=webp&width=141&height=141",
@@ -304,8 +292,7 @@ export class Gamble {
       },
       {
         name: "Drop ur pants 👖",
-        description:
-          `Mayaya complimented with a 'Nice cock', u excitingly dropped ur pants and she tipped u ${value} coins`,
+        description: `Mayaya complimented with a 'Nice cock', u excitingly dropped ur pants and she tipped u ${value} coins`,
         additional: value,
         thumbnail:
           "https://images-ext-1.discordapp.net/external/Wgiuq3nMi7tybLKo7BG_8BRtxNbeJ0ok7S5LXqeY2hc/https/cdn.discordapp.com/guilds/1236751656331509967/users/756137226202513449/avatars/d668a8acf3a50617434a25d176dcb3d1.webp?format=webp&width=141&height=141",
@@ -315,9 +302,10 @@ export class Gamble {
         name: "TAKE COVER 🗡️",
         description: `Teru invaded your country and took your loved ones captive. She spares their lives for ${value} coins`,
         additional: -value,
-        thumbnail: "https://images-ext-1.discordapp.net/external/e6jfZPmsfCN8z2FnCfSHHWhh6IZ2ojdJsw7FEk9pVEA/https/cdn.discordapp.com/avatars/709841153763180545/fa19a1f558640c92d4e2c52df61c12cd.webp?format=webp&width=141&height=141",
-        img: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZm91d3Q1ZTU1YTR0d3poMXZyaWhvNXA0M2hkdjY0NGl6aHhzMjB2YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT8qBogOUbxKWN3WXm/giphy.gif"
-      }
+        thumbnail:
+          "https://images-ext-1.discordapp.net/external/e6jfZPmsfCN8z2FnCfSHHWhh6IZ2ojdJsw7FEk9pVEA/https/cdn.discordapp.com/avatars/709841153763180545/fa19a1f558640c92d4e2c52df61c12cd.webp?format=webp&width=141&height=141",
+        img: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZm91d3Q1ZTU1YTR0d3poMXZyaWhvNXA0M2hkdjY0NGl6aHhzMjB2YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT8qBogOUbxKWN3WXm/giphy.gif",
+      },
     ];
 
     const selected =
