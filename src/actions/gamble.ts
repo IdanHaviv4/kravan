@@ -67,10 +67,8 @@ export class Gamble {
   async #sendGambleMessage() {
     if (!this.#interaction.replied) await this.#interaction.reply("Loading...");
 
-    let msg;
-
-    while (this.#revealed < this.#sequence.length) {
-      msg = await this.#interaction.editReply({
+    const edit = async () => {
+      return await this.#interaction.editReply({
         content: `${this.#sequence
           .slice(0, this.#revealed)
           .join(" ")} ${new Array(this.#sequence.length - this.#revealed)
@@ -108,9 +106,15 @@ export class Gamble {
           ),
         ],
       });
+    };
+
+    while (this.#revealed < this.#sequence.length) {
+      const msg = await edit();
 
       if (!(await this.#checkRevealClicked(msg))) break;
     }
+
+    await edit();
 
     await new Promise((res, _) => {
       setTimeout(() => {
