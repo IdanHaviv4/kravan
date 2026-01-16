@@ -26,7 +26,7 @@ export class Lottery {
   static ANNOUNCEMENTS_CHANNEL_ID = "1311121693133246535";
   static LOTTERY_CHANNEL_ID = "1459659790417399960";
   static BOT_ANNOUNCMENTS_CHANNEL_ID = "1460722368702976104";
-  static COST = 5;
+  static COST = 10;
 
   #question: QuestionT | null;
   #message: Message<boolean> | null;
