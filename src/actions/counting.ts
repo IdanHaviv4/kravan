@@ -127,6 +127,8 @@ export class Counting {
         (this.#event == COUNT_EVENT.REVERSE ? 1 : -1);
 
     if (value == next_val) {
+      this.#last_number = value;
+
       if (this.#event != COUNT_EVENT.BOOM) await this.#right(message, dir);
 
       return true;
