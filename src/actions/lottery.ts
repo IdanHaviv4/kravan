@@ -237,7 +237,7 @@ export class Lottery {
       await addCoins(user_id, prize_for_each_winner);
 
     if (winners.size) {
-      await this.#message?.edit({
+      await (this.#message?.channel as TextChannel).send({
         embeds: [
           new CustomEmbed()
             .setTitle("🤩 LOTTERY RESULTS 🤩")
@@ -273,15 +273,7 @@ export class Lottery {
         ],
       });
 
-      const results_in_msg = await this.#message?.reply(
-        `@everyone\n\nRESULTS ARE IN!!!!\n\nhttps://tenor.com/view/spongebob-results-day-nervous-nail-bite-gif-16891731`
-      );
-
-      await results_in_msg?.forward(
-        client.channels.cache.get(
-          Lottery.BOT_ANNOUNCMENTS_CHANNEL_ID
-        ) as TextChannel
-      );
+      await this.#message?.delete();
     }
 
     this.#question = null;
