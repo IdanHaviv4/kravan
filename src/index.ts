@@ -167,7 +167,12 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName("inventory")
-    .setDescription("Show your inventory"),
+    .setDescription("Show your inventory")
+    .addUserOption((option) =>
+      option
+        .setName("target")
+        .setDescription("mention the person u wanna SMASH"),
+    ),
 ].map((cmd) => cmd.toJSON());
 const guilds = [TEST_GUILD_ID, RANNI_GUILD_ID];
 
@@ -473,7 +478,10 @@ client.on("interactionCreate", async (interaction: Interaction) => {
     }
 
     case "inventory": {
-      const inventory = await getInventory(interaction.user.id);
+      const user =
+        interaction.options.getUser("target", false) ?? interaction.user;
+
+      const inventory = await getInventory(user.id);
       const inventory_with_amounts = inventory.reduce(
         (prev: Map<number, number>, curr: number) => {
           prev.set(curr, (prev.get(curr) ?? 0) + 1);
@@ -499,7 +507,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
                 }),
               ),
             )
-            .setThumbnail(interaction.user.avatarURL())
+            .setThumbnail(user.avatarURL())
             .setImage(
               "https://images-ext-1.discordapp.net/external/NcpAYtAFE1-5ldPKWGzPzzGxdqDJ7ivKMN3WgWYnXHo/https/media.tenor.com/a_16IYnWm_IAAAPo/dora-dora-the-explorer.mp4",
             ),
