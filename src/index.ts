@@ -509,7 +509,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
             )
             .setThumbnail(user.avatarURL())
             .setImage(
-              "https://images-ext-1.discordapp.net/external/NcpAYtAFE1-5ldPKWGzPzzGxdqDJ7ivKMN3WgWYnXHo/https/media.tenor.com/a_16IYnWm_IAAAPo/dora-dora-the-explorer.mp4",
+              "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2UyNzlnc2k0eXh6YnczamZ5Ynk1YTducHRrMGMzdml2emJ5b3M1NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/n6yBj4EzqmTHG/giphy.gif",
             ),
         ],
       });
