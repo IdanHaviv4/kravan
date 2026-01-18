@@ -161,23 +161,28 @@ export const addItem = async (id: string, value: number, quantity: number) => {
   });
 
   const new_arr = Array.from({ length: quantity }).fill(value) as number[];
+  const updated_arr = [...(existing?.items ?? []), ...new_arr];
+
+  if (updated_arr.length > 100) return false;
 
   await prisma.user.upsert({
     create: {
       id,
       items: {
-        set: new_arr,
+        set: updated_arr,
       },
     },
     update: {
       items: {
-        set: [...(existing?.items ?? []), ...new_arr],
+        set: updated_arr,
       },
     },
     where: {
       id,
     },
   });
+
+  return true;
 };
 
 export const useItem = async (id: string, value: number) => {

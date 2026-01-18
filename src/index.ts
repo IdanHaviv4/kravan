@@ -160,7 +160,8 @@ const commands = [
       option
         .setName("quantity")
         .setDescription("The number of copies from the item")
-        .setMinValue(1),
+        .setMinValue(1)
+        .setMaxValue(50),
     ),
 ].map((cmd) => cmd.toJSON());
 const guilds = [TEST_GUILD_ID, RANNI_GUILD_ID];
@@ -456,10 +457,11 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
       await takeCoins(interaction.user.id, item.amount * quantity);
 
-      await addItem(interaction.user.id, value, quantity);
+      if (!(await addItem(interaction.user.id, value, quantity)))
+        return await interaction.reply("INVENTORY CAN HAVE MAX 100 ITEMS");
 
       await interaction.reply(
-        `SUCCESSFULLY PURCHASED THE "${item.name.toUpperCase()}"!!`,
+        `SUCCESSFULLY PURCHASED THE "${item.name.toUpperCase()}" ${quantity} TIMES!!`,
       );
     }
   }
