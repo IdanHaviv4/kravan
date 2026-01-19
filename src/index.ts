@@ -560,11 +560,11 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
       if (data.coins < amount)
         return await interaction.reply(
-          `You only have 🪙 ${data.coins} in your wallet!`,
+          `You only have 🪙 ${data.coins.toLocaleString()} in your wallet!`,
         );
 
       try {
-        const takenAmount = await takeCoins(interaction.user.id, amount);
+        const takenAmount = await takeCoins(interaction.user.id, amount, false);
         const depositedAmount = await addToBank(
           interaction.user.id,
           takenAmount,
@@ -587,7 +587,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
       if (data.bank < amount)
         return await interaction.reply(
-          `You only have 🪙 ${data.bank} in your bank!`,
+          `You only have 🪙 ${data.bank.toLocaleString()} in your bank!`,
         );
 
       try {
