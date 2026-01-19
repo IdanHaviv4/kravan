@@ -13,11 +13,13 @@ import { Duel } from "./actions/duel.js";
 import {
   addCoins,
   addItem,
+  addToBank,
   getInventory,
   getTop5Richest,
   getUserCoins,
   hasEnoughCoins,
   takeCoins,
+  takeFromBank,
   updateAndReturnDaily,
   updateTheft,
 } from "./db/prisma.js";
@@ -173,6 +175,30 @@ const commands = [
       option
         .setName("target")
         .setDescription("mention the person u wanna SMASH"),
+    ),
+
+  new SlashCommandBuilder()
+    .setName("deposit")
+    .setDescription("Deposit money from your wallet")
+    .addNumberOption((option) =>
+      option
+        .setName("amount")
+        .setDescription("The amount to deposit")
+        .setMinValue(100)
+        .setMaxValue(100_000_000)
+        .setRequired(true),
+    ),
+
+  new SlashCommandBuilder()
+    .setName("withdraw")
+    .setDescription("Withdraw money from your bank")
+    .addNumberOption((option) =>
+      option
+        .setName("amount")
+        .setDescription("The amount to withdraw")
+        .setMinValue(100)
+        .setMaxValue(100_000_000)
+        .setRequired(true),
     ),
 ].map((cmd) => cmd.toJSON());
 const guilds = [TEST_GUILD_ID, RANNI_GUILD_ID];
@@ -524,6 +550,28 @@ client.on("interactionCreate", async (interaction: Interaction) => {
             ),
         ],
       });
+
+      break;
+    }
+
+    case "deposit": {
+      const amount = interaction.options.getNumber("amount", true);
+      const real_amount = await takeCoins(interaction.user.id, amount, true);
+
+      await addToBank(interaction.user.id, real_amount);
+
+      await interaction.reply(`Deposited 🪙 ${real_amount} into your bank!`);
+
+      break;
+    }
+
+    case "withdraw": {
+      const amount = interaction.options.getNumber("amount", true);
+      const real_amount = await takeFromBank(interaction.user.id, amount, true);
+
+      const final = await addCoins(interaction.user.id, real_amount);
+
+      await interaction.reply(`Withdrawed 🪙 ${final} into your wallet!`);
 
       break;
     }

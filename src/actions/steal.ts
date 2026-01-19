@@ -1,4 +1,7 @@
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   CacheType,
   ChatInputCommandInteraction,
   Message,
@@ -7,8 +10,13 @@ import {
   userMention,
 } from "discord.js";
 import { client } from "../index.js";
-import { addCoins, getUserCoins, takeCoins, useItem } from "../db/prisma.js";
-import { getRandomFromArray } from "../utils/helpers.js";
+import {
+  addCoins,
+  getUserCoins,
+  hasEnoughCoins,
+  takeCoins,
+  useItem,
+} from "../db/prisma.js";
 import { CustomEmbed } from "../utils/embed.js";
 import { ItemId } from "./store.js";
 
@@ -62,9 +70,63 @@ export class Steal {
     await this.#interaction.deleteReply();
   }
 
+  async #sendCaught(msg: string, image: string) {
+    const value = await this.#getValue();
+    const can_afford = await hasEnoughCoins(this.#theif.id, value);
+
+    await this.#msg?.edit({
+      content: "",
+      embeds: [
+        new CustomEmbed()
+          .setColor(0xf29411)
+          .setDescription(
+            `${msg}\n\n${
+              this.#theif.displayName
+            }, if thats u (shame on u), choose the option u want to take (you have 5 minutes, unanswering will put you in jail)`,
+          )
+          .setThumbnail(this.#theif.avatarURL())
+          .setImage(image),
+      ],
+      components: can_afford
+        ? [
+            new ActionRowBuilder<ButtonBuilder>().addComponents(
+              new ButtonBuilder()
+                .setCustomId("pay")
+                .setLabel(`🪙 ${value}`)
+                .setStyle(ButtonStyle.Success),
+              new ButtonBuilder()
+                .setCustomId("jail")
+                .setLabel("ME SCARED")
+                .setStyle(ButtonStyle.Danger),
+            ),
+          ]
+        : [],
+    });
+
+    // TODO: put in jail
+    if (!can_afford) return;
+
+    try {
+      const confirmation = await this.#msg!.awaitMessageComponent({
+        filter: (i) => i.user.id === this.#theif.id,
+        time: 300_000,
+      });
+
+      if (
+        confirmation?.customId == "pay" &&
+        (await hasEnoughCoins(this.#theif.id, value))
+      )
+        await takeCoins(this.#theif.id, value);
+      else {
+        // TODO: put in jail
+      }
+    } catch {
+      // TODO: put in jail
+    }
+  }
+
   async #waitForResponse() {
     try {
-      // TODO: change time if victim bought more time to reply
       const response = await this.#getChannel().awaitMessages({
         max: 1,
         filter: (msg) =>
@@ -76,55 +138,23 @@ export class Steal {
 
       await response.first()?.delete();
 
-      await this.#msg?.edit({
-        content: "",
-        embeds: [
-          new CustomEmbed()
-            .setColor(0xf29411)
-            .setDescription(
-              `NICE ${userMention(this.#victim.id)}!! YOU CAUGHT ${userMention(
-                this.#theif.id,
-              )} THINKING HE IS SLICK WITH IT PFFFFF\n\n${
-                this.#theif.displayName
-              } gets fined with 10 coins for attempting to steal, its not nice... 😠`,
-            )
-            .setThumbnail(this.#theif.avatarURL())
-            .setImage(
-              "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYW1jNXFqYmE4NTFiNW4xeG9hMjllMmdhYTU2eGJkdDJ2c2J4MDJ5NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oohqHb5EbWKHypBtdh/giphy.gif",
-            ),
-        ],
-      });
-
-      await takeCoins(this.#theif.id, 10);
+      await this.#sendCaught(
+        `NICE ${userMention(this.#victim.id)}!! YOU CAUGHT ${userMention(
+          this.#theif.id,
+        )} THINKING HE IS SLICK WITH IT PFFFFF`,
+        "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExYW1jNXFqYmE4NTFiNW4xeG9hMjllMmdhYTU2eGJkdDJ2c2J4MDJ5NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oohqHb5EbWKHypBtdh/giphy.gif",
+      );
     } catch {
-      if (Math.floor(Math.random() * 2) <= 0) {
-        await this.#msg?.edit({
-          content: "",
-          embeds: [
-            new CustomEmbed()
-              .setColor(0xf29411)
-              .setDescription(
-                `CCTV CAMS CAUGHT ${userMention(
-                  this.#theif.id,
-                )} ON 4K RUNNING WITH ${userMention(
-                  this.#victim.id,
-                )}'S MONEY!!\n\n${
-                  this.#theif.displayName
-                } gets fined with 10 coins for attempting to steal, its not nice... 😠`,
-              )
-              .setThumbnail(this.#theif.avatarURL())
-              .setImage(
-                "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaThvNWkxaGtnd2pobDljeHRnYTFjaXZtbjlzeHp3MG0yYXo2aXJwbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dLhoOYRmsJVOhKbyTK/giphy.gif",
-              ),
-          ],
-        });
-
-        await takeCoins(this.#theif.id, 10);
-
-        return;
-      }
+      if (Math.floor(Math.random() * 2) <= 0)
+        return await this.#sendCaught(
+          `CCTV CAMS CAUGHT ${userMention(
+            this.#theif.id,
+          )} ON 4K RUNNING WITH ${userMention(this.#victim.id)}'S MONEY!!`,
+          "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaThvNWkxaGtnd2pobDljeHRnYTFjaXZtbjlzeHp3MG0yYXo2aXJwbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dLhoOYRmsJVOhKbyTK/giphy.gif",
+        );
 
       const full_victim_amount = (await getUserCoins(this.#victim.id)).coins;
+
       const amount = Math.max(
         Math.floor(
           Math.random() * (full_victim_amount / 16 + 1) +
@@ -153,6 +183,19 @@ export class Steal {
         ],
       });
     }
+  }
+
+  async #getValue() {
+    const full_victim_amount = (await getUserCoins(this.#victim.id)).coins;
+
+    const amount = Math.max(
+      Math.floor(
+        Math.random() * (full_victim_amount / 20 + 1) + full_victim_amount / 20,
+      ),
+      1,
+    );
+
+    return amount;
   }
 
   #getChannel() {
