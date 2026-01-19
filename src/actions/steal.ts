@@ -83,7 +83,7 @@ export class Steal {
       }
 
       await this.#msg?.edit({
-        content: `${userMention(this.#theif.id)} tried to steal from ${userMention(this.#victim.id)}, and ${can_afford ? "was forced to serve in jail for 10 minutes ⛓️" : `chose to ${custom_id == "jail" ? "serve in jail for 10 minutes ⛓️" : `pay a ${value.toLocaleString()} coins fine 🪙`}`}`,
+        content: `${userMention(this.#theif.id)} tried to steal from ${userMention(this.#victim.id)}, and ${!can_afford ? "was forced to serve in jail for 10 minutes ⛓️" : `chose to ${custom_id == "jail" ? "serve in jail for 10 minutes ⛓️" : `pay a ${value.toLocaleString()} coins fine 🪙`}`}`,
         embeds: [],
         components: [],
       });
