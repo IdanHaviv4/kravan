@@ -125,7 +125,7 @@ export const hasEnoughCoins = async (id: string, min: number) => {
 export const addToBank = async (id: string, amount: number) => {
   if (amount === 0) return 0;
 
-  const taxRate = amount > 0 ? 0.9 : 1;
+  const taxRate = amount > 0 ? 0.95 : 1;
   const finalAmount =
     amount > 0 ? Math.max(Math.floor(amount * taxRate), 1) : amount;
 

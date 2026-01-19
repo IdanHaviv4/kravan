@@ -571,7 +571,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         );
 
         await interaction.reply(
-          `Deposited 🪙 ${depositedAmount.toLocaleString()} into your bank! (10% fee applied)`,
+          `Deposited 🪙 ${depositedAmount.toLocaleString()} into your bank! (5% fee applied)`,
         );
       } catch {
         await interaction.reply(
