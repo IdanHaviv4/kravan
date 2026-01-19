@@ -27,7 +27,7 @@ export class Store {
       .setDescription("Buy cool stuff here lol")
       .setFields(
         Object.entries(this.ITEMS).map(([id, item]) => ({
-          name: `${id}) ${item.name} (🪙 ${item.amount})`,
+          name: `${id}) ${item.name} (🪙 ${item.amount.toLocaleString()})`,
           value: `- ${item.description}`,
           inline: true,
         })),

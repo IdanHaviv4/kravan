@@ -47,8 +47,8 @@ export class Duel {
   async #sendInvitation() {
     return await this.#interaction.reply({
       content: `OOO ${userMention(this.#initiator.id)} invited ${userMention(
-        this.#target.id
-      )} to a duel on ${this.#bet} coins 🪙.\n${
+        this.#target.id,
+      )} to a duel on ${this.#bet.toLocaleString()} coins 🪙.\n${
         this.#target.username
       } has 1 minute to respond.\n\n`,
       components: [
@@ -60,7 +60,7 @@ export class Duel {
           new ButtonBuilder()
             .setCustomId("deny")
             .setLabel("ME SCARED")
-            .setStyle(ButtonStyle.Danger)
+            .setStyle(ButtonStyle.Danger),
         ),
       ],
       withResponse: true,
@@ -68,7 +68,7 @@ export class Duel {
   }
 
   async #checkInvitationResponse(
-    invitation: InteractionCallbackResponse<boolean>
+    invitation: InteractionCallbackResponse<boolean>,
   ) {
     try {
       const confirmation =
@@ -90,7 +90,7 @@ export class Duel {
         });
 
       const channel = client.channels.cache.get(
-        this.#interaction.channelId
+        this.#interaction.channelId,
       ) as TextChannel;
       await this.#interaction.deleteReply();
 
@@ -98,8 +98,8 @@ export class Duel {
     } catch (e) {
       await this.#interaction.editReply({
         content: `${userMention(this.#initiator.id)} invited ${userMention(
-          this.#target.id
-        )} to a duel on ${this.#bet} coins 🪙, but ${
+          this.#target.id,
+        )} to a duel on ${this.#bet.toLocaleString()} coins 🪙, but ${
           this.#target.displayName
         } went pooping or sum (be careful not to smash ur head against the toilet)`,
         components: [],
@@ -139,15 +139,15 @@ export class Duel {
             }>`;
           })
           .join("\n")}\n\n${userMention(
-          winner
-        )} WON ${pool} coins WITHOUT ANY ISSUES 🥳🎊!!!`,
+          winner,
+        )} WON ${pool.toLocaleString()} coins WITHOUT ANY ISSUES 🥳🎊!!!`,
         embeds: [],
         components: [],
       });
     } catch (e) {
       await game_msg.edit({
         content: `Looks like ${userMention(
-          e as string
+          e as string,
         )} is SLEEPING rn 😴\nCoins were readded to the participants.`,
         embeds: [],
         components: [],
@@ -162,21 +162,21 @@ export class Duel {
           .setTitle(
             is_rematch
               ? "DRAW! FIGHT CONTINUES 🥊"
-              : "LET THE FIGHTING BEGIN 🥊"
+              : "LET THE FIGHTING BEGIN 🥊",
           )
           .setDescription(
             `You have 1 minute to lock in your answer\n\n${userMention(
-              this.#initiator.id
-            )} VS ${userMention(this.#target.id)}\nPRICE POOL: ${
+              this.#initiator.id,
+            )} VS ${userMention(this.#target.id)}\nPRICE POOL: ${(
               this.#bet * 2
-            } coins 🪙`
+            ).toLocaleString()} coins 🪙`,
           )
           .setColor(0xff4242)
           .setImage(
-            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnA0ajJuODJ0N244NWxibjE1N3I3bGl2NWkxcTliMm55dHM5ZnRqdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/B52HxLPfFwt8Gdacat/giphy.gif"
+            "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnA0ajJuODJ0N244NWxibjE1N3I3bGl2NWkxcTliMm55dHM5ZnRqdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/B52HxLPfFwt8Gdacat/giphy.gif",
           )
           .setThumbnail(
-            "https://images-ext-1.discordapp.net/external/AQNkEjhlEl3gQDkdIKutRJyxyKEWIvOCZtNwrkQVWD0/%3Fsize%3D48%26animated%3Dtrue%26name%3D8345cwin/https/cdn.discordapp.com/emojis/1457139340797935738.gif?width=53&height=53"
+            "https://images-ext-1.discordapp.net/external/AQNkEjhlEl3gQDkdIKutRJyxyKEWIvOCZtNwrkQVWD0/%3Fsize%3D48%26animated%3Dtrue%26name%3D8345cwin/https/cdn.discordapp.com/emojis/1457139340797935738.gif?width=53&height=53",
           ),
       ],
       components: [
@@ -187,8 +187,8 @@ export class Duel {
               .setEmoji({
                 id: icon.id,
               })
-              .setStyle(ButtonStyle.Secondary)
-          )
+              .setStyle(ButtonStyle.Secondary),
+          ),
         ),
       ],
     });

@@ -342,7 +342,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
             .setFields([
               {
                 name: user.displayName,
-                value: `🪙 ${await getUserCoins(user.id)} coins`,
+                value: `🪙 ${(await getUserCoins(user.id)).toLocaleString()} coins`,
               },
             ])
             .setDescription("Elon Musk dis u?")
@@ -377,7 +377,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
             )
             .setFields(
               (await getTop5Richest()).map((user, idx) => ({
-                name: `🪙 ${user.coins} coins`,
+                name: `🪙 ${user.coins.toLocaleString()} coins`,
                 value: `-${
                   idx == 0 ? " 🥇" : idx == 1 ? " 🥈" : idx == 2 ? " 🥉" : ""
                 } ${userMention(user.id)}`,
@@ -412,7 +412,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
           from.displayName
         } gave ${userMention(
           to.id,
-        )} ${amount} coins 🪙\n\n(Exucse me im gonna tear up 🥹)`,
+        )} ${amount.toLocaleString()} coins 🪙\n\n(Exucse me im gonna tear up 🥹)`,
       );
 
       break;
@@ -429,7 +429,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       await addCoins(interaction.user.id, result);
 
       return await interaction.reply(
-        `NICE! Streak is now ${result} days 🔥 You got +${result} coins 🪙`,
+        `NICE! Streak is now ${result.toLocaleString()} days 🔥 You got +${result.toLocaleString()} coins 🪙`,
       );
     }
 
@@ -471,7 +471,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       await takeCoins(interaction.user.id, item.amount * quantity);
 
       await interaction.reply(
-        `SUCCESSFULLY PURCHASED THE "${item.name.toUpperCase()}" ${quantity} TIMES!!`,
+        `SUCCESSFULLY PURCHASED THE "${item.name.toUpperCase()}" ${quantity} TIMES FOR ${(item.amount * quantity).toLocaleString()} COINS!!`,
       );
 
       break;
@@ -502,7 +502,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
               Array.from(inventory_with_amounts.entries()).map(
                 ([item, quantity]) => ({
                   name: Store.ITEMS[item]!.name,
-                  value: `× ${quantity}`,
+                  value: `× ${quantity.toLocaleString()}`,
                   inline: true,
                 }),
               ),
