@@ -377,7 +377,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
             )
             .setFields(
               (await getTop5Richest()).map((user, idx) => ({
-                name: `🪙 ${user.coins.toLocaleString()} coins`,
+                name: `🪙 ${user.coins.toLocaleString()}`,
                 value: `-${
                   idx == 0 ? " 🥇" : idx == 1 ? " 🥈" : idx == 2 ? " 🥉" : ""
                 } ${userMention(user.id)}`,
