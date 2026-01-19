@@ -40,8 +40,17 @@ export const addCoins = async (id: string, amount: number) => {
     },
   });
 
-  if (coins > 1_000_000) await addToBank(id, coins - 1_000_000);
-  else if (coins < 0) await takeFromBank(id, Math.abs(coins));
+  if (coins > 1_000_000) {
+    const diff = coins - 1_000_000;
+
+    await takeCoins(id, diff);
+    await addToBank(id, diff);
+  } else if (coins < 0) {
+    const diff = Math.abs(coins);
+
+    await addCoins(id, diff);
+    await takeFromBank(id, diff);
+  }
 };
 
 export const takeCoins = async (id: string, amount: number) => {
@@ -72,10 +81,8 @@ export const hasEnoughCoins = async (id: string, min: number) => {
 };
 
 export const addToBank = async (id: string, amount: number) => {
-  const final_amount = Math.floor(amount * 0.9);
+  const final_amount = Math.max(Math.floor(amount * 0.9), 1);
   let add_to_jackpot = amount - final_amount;
-
-  if (final_amount == 0) return;
 
   const { bank } = await prisma.user.upsert({
     select: {
