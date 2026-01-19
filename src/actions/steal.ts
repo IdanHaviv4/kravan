@@ -156,15 +156,7 @@ export class Steal {
           "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExaThvNWkxaGtnd2pobDljeHRnYTFjaXZtbjlzeHp3MG0yYXo2aXJwbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dLhoOYRmsJVOhKbyTK/giphy.gif",
         );
 
-      const full_victim_amount = (await getUserCoins(this.#victim.id)).coins;
-
-      const amount = Math.max(
-        Math.floor(
-          Math.random() * (full_victim_amount / 16 + 1) +
-            full_victim_amount / 16,
-        ),
-        1,
-      );
+      const amount = await this.#getValue();
 
       await takeCoins(this.#victim.id, amount);
       await addCoins(this.#theif.id, amount);
