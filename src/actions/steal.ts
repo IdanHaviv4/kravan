@@ -72,7 +72,6 @@ export class Steal {
 
   async #sendCaught(msg: string, image: string) {
     const value = await this.#getValue();
-    const can_afford = await hasEnoughCoins(this.#theif.id, value);
 
     const editUserChosenOption = async (custom_id: string) => {
       const can_afford = await hasEnoughCoins(this.#theif.id, value);
@@ -103,23 +102,19 @@ export class Steal {
           .setThumbnail(this.#theif.avatarURL())
           .setImage(image),
       ],
-      components: can_afford
-        ? [
-            new ActionRowBuilder<ButtonBuilder>().addComponents(
-              new ButtonBuilder()
-                .setCustomId("pay")
-                .setLabel(`🪙 ${value.toLocaleString()}`)
-                .setStyle(ButtonStyle.Secondary),
-              new ButtonBuilder()
-                .setCustomId("jail")
-                .setLabel(`⛓️ 10 mins`)
-                .setStyle(ButtonStyle.Secondary),
-            ),
-          ]
-        : [],
+      components: [
+        new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder()
+            .setCustomId("pay")
+            .setLabel(`🪙 ${value.toLocaleString()}`)
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId("jail")
+            .setLabel(`⛓️ 10 mins`)
+            .setStyle(ButtonStyle.Secondary),
+        ),
+      ],
     });
-
-    if (!can_afford) return await editUserChosenOption("jail");
 
     try {
       const confirmation = await this.#msg!.awaitMessageComponent({
