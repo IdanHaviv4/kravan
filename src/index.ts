@@ -414,29 +414,46 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         break;
 
       case "superiors":
-        await interaction.reply({
-          embeds: [
-            new CustomEmbed()
-              .setTitle("WOW 🤩🤑")
-              .setDescription("Give sum for the rest of us mfs")
-              .setColor(0x35de35)
-              .setImage(
-                "https://content.imageresizer.com/images/memes/huell-money-meme-65w66.jpg",
-              )
-              .setFields(
-                (await getTop5Richest()).map((user, idx) => ({
-                  name: `🪙 ${user.total.toLocaleString()}`,
-                  value: `-${
-                    idx == 0 ? " 🥇" : idx == 1 ? " 🥈" : idx == 2 ? " 🥉" : ""
-                  } ${userMention(user.id)}`,
-                  inline: true,
-                })),
-              )
-              .setThumbnail(
-                "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHNjcTY5c3J1cnVlZ3pxamZ0ZHZvdGFqZ2x4N3N6aHIwdnZrZXpqaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MFsqcBSoOKPbjtmvWz/giphy.gif",
-              ),
-          ],
-        });
+        {
+          const result = await getTop5Richest();
+          const usernames: Map<string, string> = new Map();
+
+          for (const user of result)
+            usernames.set(
+              user.id,
+              (await client.users.fetch(user.id)).username,
+            );
+
+          await interaction.reply({
+            embeds: [
+              new CustomEmbed()
+                .setTitle("WOW 🤩🤑")
+                .setDescription("Give sum for the rest of us mfs")
+                .setColor(0x35de35)
+                .setImage(
+                  "https://content.imageresizer.com/images/memes/huell-money-meme-65w66.jpg",
+                )
+                .setFields(
+                  (await getTop5Richest()).map((user, idx) => ({
+                    name: `${
+                      idx == 0
+                        ? " 🥇"
+                        : idx == 1
+                          ? " 🥈"
+                          : idx == 2
+                            ? " 🥉"
+                            : ""
+                    } ${usernames.get(user.id)}`,
+                    value: `👛 ${user.coins.toLocaleString()}\n🏦 ${user.bank.toLocaleString()}\n💸 ${(user.coins + user.bank).toLocaleString()}`,
+                    inline: true,
+                  })),
+                )
+                .setThumbnail(
+                  "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHNjcTY5c3J1cnVlZ3pxamZ0ZHZvdGFqZ2x4N3N6aHIwdnZrZXpqaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MFsqcBSoOKPbjtmvWz/giphy.gif",
+                ),
+            ],
+          });
+        }
 
         break;
 
@@ -492,7 +509,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
         if (target.bot || target.id == interaction.user.id) return;
 
-        if (!(await hasEnoughCoins(target.id, 0))) return;
+        if (!(await hasEnoughCoins(target.id, 1))) return;
 
         if (!(await updateTheft(interaction.user.id))) return;
 
