@@ -11,6 +11,7 @@ import {
   convertToNumber,
   getRandomFromArray,
   goThroughAllMessages,
+  validateNotInJail,
 } from "../utils/helpers.js";
 import { addCoins, hasEnoughCoins, takeCoins } from "../db/prisma.js";
 import { Mutex } from "async-mutex";
@@ -150,8 +151,6 @@ export class Counting {
 
   async handleMessage(message: MessageT) {
     await this.#lock(async () => {
-      if (message.channelId != Counting.COUNTING_CHANNEL_ID) return;
-
       if (message.author.id == client.user?.id) return;
 
       const value = convertToNumber(message.content);
@@ -163,6 +162,8 @@ export class Counting {
           message.content.toLowerCase() != "boom")
       )
         return;
+
+      await validateNotInJail(message.author.id);
 
       if (this.#last_counter_id == message.author.id && !this.#trapped_by)
         return await message.reply("WHY R U COUNTING TWICE STUPID");

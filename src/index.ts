@@ -509,7 +509,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
         if (target.bot || target.id == interaction.user.id) return;
 
-        if (!(await hasEnoughCoins(target.id, 1))) return;
+        if (!(await hasEnoughCoins(target.id, 20))) return;
 
         if (!(await updateTheft(interaction.user.id))) return;
 
@@ -705,8 +705,6 @@ client.on("messageCreate", async (message) => {
         break;
 
       case Counting.COUNTING_CHANNEL_ID:
-        await validateNotInJail(message.author.id);
-
         await counting.handleMessage(message);
 
         break;
