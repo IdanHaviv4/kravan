@@ -27,12 +27,8 @@ const getBankAmountWithTax = (amount: number) => {
   return finalAmount;
 };
 
-export const addCoins = async (
-  id: string,
-  amount: number,
-  add_to_jackpot: boolean = true,
-) => {
-  if (amount < 0 && add_to_jackpot) await addToJackpot(Math.abs(amount));
+export const addCoins = async (id: string, amount: number) => {
+  if (amount < 0) await addToJackpot(Math.abs(amount));
 
   const user = await prisma.user.upsert({
     select: {
@@ -99,12 +95,8 @@ export const addCoins = async (
   return Math.abs(amount);
 };
 
-export const takeCoins = async (
-  id: string,
-  amount: number,
-  add_to_jackpot: boolean = true,
-) => {
-  return await addCoins(id, -amount, add_to_jackpot);
+export const takeCoins = async (id: string, amount: number) => {
+  return await addCoins(id, -amount);
 };
 
 export const getUserCoins = async (id: string) => {
@@ -189,7 +181,31 @@ export const takeFromBank = async (id: string, amount: number) => {
 export const addToJackpot = async (amount: number) => {
   const amount_to_add = Math.max(Math.floor(amount / 4), 1);
 
-  // TODO: add amount_to_add to jackpot
+  await prisma.jackpot.updateMany({
+    data: {
+      coins: {
+        increment: amount_to_add,
+      },
+    },
+  });
+};
+
+export const getJackpot = async () => {
+  const jackpot = await prisma.jackpot.findFirst();
+
+  return jackpot?.coins;
+};
+
+export const clearJackpot = async () => {
+  const jackpot = await getJackpot();
+
+  await prisma.jackpot.updateMany({
+    data: {
+      coins: 0,
+    },
+  });
+
+  return jackpot;
 };
 
 export const getTop5Richest = async () => {

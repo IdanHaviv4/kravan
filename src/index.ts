@@ -16,6 +16,7 @@ import {
   addItem,
   addToBank,
   getInventory,
+  getJackpot,
   getTop5Richest,
   getUserCoins,
   hasEnoughCoins,
@@ -203,6 +204,10 @@ const commands = [
         .setMaxValue(100_000_000)
         .setRequired(true),
     ),
+
+  new SlashCommandBuilder()
+    .setName("jackpot")
+    .setDescription("Get the current jackpot"),
 ].map((cmd) => cmd.toJSON());
 const guilds = [TEST_GUILD_ID, RANNI_GUILD_ID];
 
@@ -605,11 +610,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
           );
 
         try {
-          const takenAmount = await takeCoins(
-            interaction.user.id,
-            amount,
-            false,
-          );
+          const takenAmount = await takeCoins(interaction.user.id, amount);
           const depositedAmount = await addToBank(
             interaction.user.id,
             takenAmount,
@@ -688,6 +689,22 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         await counting.trap(interaction);
 
         break;
+
+      case "jackpot": {
+        await interaction.reply({
+          embeds: [
+            new CustomEmbed()
+              .setTitle(`🪙 ${await getJackpot()}`)
+              .setDescription("Go use the bot, you might win it all...")
+              .setColor(0x14dea1)
+              .setImage(
+                "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmhjbnAyaGl5N24wZnZ2eHAzMTFyMGcwZ2NhdWU1bGlmcTQ5cnYxcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LCdPNT81vlv3y/giphy.gif",
+              ),
+          ],
+        });
+
+        break;
+      }
     }
   } catch (e: any) {
     await interaction.reply(JSON.parse(e.message));

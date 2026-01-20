@@ -16,3 +16,7 @@ model User {
   jail DateTime?
   items Int[] @default([])
 }
+
+model Jackpot {
+  coins Int @id @default(0)
+}
