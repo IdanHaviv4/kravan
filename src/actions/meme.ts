@@ -11,6 +11,10 @@ enum Memes {
   TAKE_MONEY,
   COOKING,
   STONKS,
+  SAVIOR,
+  CHILL_GUY,
+  BROKE,
+  CHASE,
 }
 
 type MemeT = {
@@ -52,6 +56,61 @@ export class Meme {
           x: 108,
           y: 45,
           size: 175,
+        },
+      ],
+    })
+    .set(Memes.SAVIOR, {
+      name: "Savior",
+      image: "https://i.imgflip.com/3p5foq.jpg",
+      avatars: [
+        {
+          x: 425,
+          y: 205,
+          size: 270,
+        },
+        {
+          x: 650,
+          y: 803,
+          size: 150,
+        },
+      ],
+    })
+    .set(Memes.CHILL_GUY, {
+      name: "Chill guy",
+      image: "https://i.imgflip.com/9au02y.jpg",
+      avatars: [
+        {
+          x: 125,
+          y: 93,
+          size: 150,
+        },
+      ],
+    })
+    .set(Memes.BROKE, {
+      name: "Broke",
+      image: "https://i.imgflip.com/3kobxz.jpg",
+      avatars: [
+        {
+          x: 340,
+          y: 40,
+          size: 190,
+        },
+      ],
+    })
+    .set(Memes.CHASE, {
+      name: "Chase",
+      image:
+        "https://scontent.ftlv5-1.fna.fbcdn.net/v/t1.6435-9/157375125_10158379186214822_5596869456124347766_n.png?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=7J2HRaMtAeoQ7kNvwGrQ1pW&_nc_oc=Adl7jCwGxH9D5WmtWMKEq5xtqo3DaGZQNrxdvk21rO0SFwCtH2RSrd7iGk4MTaK9ChM&_nc_zt=23&_nc_ht=scontent.ftlv5-1.fna&_nc_gid=TQiCiKx2wDloXki_q23Jzg&oh=00_AfrQUMmAw3bDvH7B0H5ik2lxmY5oL708eP5M1_wH0LaFdg&oe=6998A7FF",
+      avatars: [
+        {
+          x: 235,
+          y: 120,
+          size: 105,
+        },
+        {
+          x: 367,
+          y: 297,
+          size: 105,
         },
       ],
     });
