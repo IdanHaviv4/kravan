@@ -295,21 +295,22 @@ export const updateTheft = async (id: string) => {
     },
   });
 
-  const date = moment().utc().toDate();
+  const last_date = moment(user?.last_theft).startOf("day");
+  const current_date = moment().utc().startOf("day");
 
-  if (
-    user?.last_theft?.toLocaleDateString("en-US") ==
-    date.toLocaleDateString("en-US")
-  )
-    return false;
+  const diff = user?.last_theft
+    ? Math.floor(Math.abs(last_date.diff(current_date, "days")))
+    : 1;
+
+  if (diff <= 0) return false;
 
   await prisma.user.upsert({
     create: {
       id,
-      last_theft: date,
+      last_theft: current_date.toDate(),
     },
     update: {
-      last_theft: date,
+      last_theft: current_date.toDate(),
     },
     where: {
       id,
