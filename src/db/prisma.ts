@@ -224,16 +224,10 @@ export const getTop5Richest = async () => {
           },
         },
       },
-      orderBy: [
-        {
-          coins: "desc",
-        },
-        {
-          bank: "desc",
-        },
-      ],
     })
-  ).sort((a, b) => b.total - a.total);
+  )
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 6);
 };
 
 export const updateAndReturnDaily = async (id: string) => {
