@@ -221,7 +221,7 @@ const commands = [
         .addChoices(
           Object.entries(Meme.MEMES).map(([type, data]) => ({
             name: data.name,
-            value: type,
+            value: type.toString(),
           })),
         ),
     )
@@ -729,7 +729,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         break;
       }
 
-      case "image": {
+      case "meme": {
         new Meme(interaction);
 
         break;
