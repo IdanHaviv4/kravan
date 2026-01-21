@@ -211,11 +211,27 @@ export const clearJackpot = async () => {
 export const getTop5Richest = async () => {
   return (
     await prisma.user.findMany({
+      take: 5,
       where: {
-        coins: {
-          gt: 0,
+        NOT: {
+          AND: {
+            coins: {
+              lte: 0,
+            },
+            bank: {
+              lte: 0,
+            },
+          },
         },
       },
+      orderBy: [
+        {
+          coins: "desc",
+        },
+        {
+          bank: "desc",
+        },
+      ],
     })
   ).sort((a, b) => b.total - a.total);
 };
