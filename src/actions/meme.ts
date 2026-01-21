@@ -23,9 +23,9 @@ export class Meme {
     image: "https://imgflip.com/s/meme/Shut-Up-And-Take-My-Money-Fry.jpg",
     avatars: [
       {
-        x: 110,
-        y: 25,
-        size: 175,
+        x: 170,
+        y: 90,
+        size: 100,
       },
     ],
   });
