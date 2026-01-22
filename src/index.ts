@@ -234,6 +234,28 @@ const commands = [
     .addUserOption((option) =>
       option.setName("user2").setDescription("Second user in the meme"),
     ),
+
+  new SlashCommandBuilder()
+    .setName("rate")
+    .setDescription("Rate a person by some category")
+    .addUserOption((option) =>
+      option
+        .setName("target")
+        .setDescription("Mention the target")
+        .setRequired(true),
+    )
+    .addStringOption((option) =>
+      option
+        .setName("category")
+        .setDescription("The category")
+        .setChoices(
+          ...["gay"].map((el) => ({
+            name: el,
+            value: el,
+          })),
+        )
+        .setRequired(true),
+    ),
 ].map((cmd) => cmd.toJSON());
 const guilds = [TEST_GUILD_ID, RANNI_GUILD_ID];
 
@@ -738,6 +760,29 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
       case "meme": {
         new Meme(interaction);
+
+        break;
+      }
+
+      case "rate": {
+        const target = interaction.options.getUser("target", true);
+        const category = interaction.options.getString("category", true);
+
+        switch (category) {
+          case "gay":
+            await interaction.reply({
+              embeds: [
+                new CustomEmbed()
+                  .setTitle("🏳️‍🌈 Gayrate 🏳️‍🌈")
+                  .setDescription(
+                    `${userMention(target.id)} is ${Math.floor(Math.random() * 101)}% gay 🏳️‍🌈`,
+                  )
+                  .setColor(0xf772d6),
+              ],
+            });
+
+            break;
+        }
 
         break;
       }
