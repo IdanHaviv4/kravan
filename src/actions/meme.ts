@@ -15,6 +15,12 @@ enum Memes {
   CHILL_GUY,
   BROKE,
   CHASE,
+  OMEN,
+  RAW,
+  DOUPLEGANGER,
+  RIP,
+  IDK,
+  COMMUNIST,
 }
 
 type MemeT = {
@@ -111,6 +117,86 @@ export class Meme {
           x: 367,
           y: 297,
           size: 105,
+        },
+      ],
+    })
+    .set(Memes.OMEN, {
+      name: "Omen",
+      image:
+        "https://media.discordapp.net/attachments/1439321657108861050/1463871549315485801/966FAE68-5CEE-49E4-8024-A85A0D8A4BD3.jpg?ex=6973681e&is=6972169e&hm=dd90e314d7a3b402b5b95913aca9657f19385de5d5f330ccb195bd98041c5cf7&=&format=webp&width=437&height=470",
+      avatars: [
+        {
+          x: 150,
+          y: 40,
+          size: 100,
+        },
+      ],
+    })
+    .set(Memes.RAW, {
+      name: "Raw",
+      image:
+        "https://cdn.discordapp.com/attachments/1439321657108861050/1463924560066777161/iu_.png?ex=6973997d&is=697247fd&hm=a6467028f08dc1bd0db224e3405632ddca3c6ee976f40ef42c7d13b19bfec331&",
+      avatars: [
+        {
+          x: 820,
+          y: 0,
+          size: 465,
+        },
+      ],
+    })
+    .set(Memes.DOUPLEGANGER, {
+      name: "Doupleganger",
+      image:
+        "https://media.discordapp.net/attachments/1439321657108861050/1463926699841425470/1tkjq9.png?ex=69739b7b&is=697249fb&hm=d307e8b1a8c0fb813c47d015244c4b599aa1b7c2336392b5c8ad57a4b804ea30&=&format=webp&quality=lossless&width=880&height=495",
+      avatars: [
+        {
+          x: 190,
+          y: 18,
+          size: 70,
+        },
+        {
+          x: 560,
+          y: 22,
+          size: 70,
+        },
+      ],
+    })
+    .set(Memes.RIP, {
+      name: "RIP",
+      image: "https://i.imgflip.com/3nx72a.png",
+      avatars: [
+        {
+          x: 85,
+          y: 165,
+          size: 75,
+        },
+        {
+          x: 230,
+          y: 198,
+          size: 75,
+        },
+      ],
+    })
+    .set(Memes.IDK, {
+      name: "Idk man",
+      image:
+        "https://media.discordapp.net/attachments/1439321657108861050/1463927495131791604/1lj6ra.png?ex=69739c39&is=69724ab9&hm=824da5e70070b2beddc73c4796f6d8e9faa32ed3234b6b29c61aa4ca11654899&=&format=webp&quality=lossless&width=422&height=344",
+      avatars: [
+        {
+          x: 150,
+          y: 35,
+          size: 125,
+        },
+      ],
+    })
+    .set(Memes.COMMUNIST, {
+      name: "Communist",
+      image: "https://i.imgflip.com/44eggm.png",
+      avatars: [
+        {
+          x: 200,
+          y: 65,
+          size: 125,
         },
       ],
     });
