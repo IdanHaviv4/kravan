@@ -443,7 +443,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
                 },
                 {
                   name: "💎 Gems",
-                  value: `:CrowThumbsUp: ${data.gems.toLocaleString()} gems`,
+                  value: `<:CrowThumbsUp:1311140052427997216> ${data.gems.toLocaleString()} gems`,
                   inline: true,
                 },
               ])

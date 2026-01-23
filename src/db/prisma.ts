@@ -10,7 +10,7 @@ const prisma = new PrismaClient({ adapter }).$extends({
   result: {
     user: {
       total: {
-        needs: { gems: true, bank: true, coins: true },
+        needs: { bank: true, coins: true },
         compute(user) {
           return user.coins + user.bank;
         },
