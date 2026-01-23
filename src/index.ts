@@ -502,7 +502,7 @@ client.on("interactionCreate", async (interaction: Interaction) => {
                             ? " 🥉"
                             : ""
                     } ${usernames.get(user.id)}`,
-                    value: `👛 ${user.coins.toLocaleString()}\n🏦 ${user.bank.toLocaleString()}\n💎 ${user.gems.toLocaleString()} \n💸 ${(user.coins + user.bank).toLocaleString()}`,
+                    value: `👛 ${user.coins.toLocaleString()}\n🏦 ${user.bank.toLocaleString()}\n💎 ${user.gems.toLocaleString()} \n💸 ${user.total.toLocaleString()}`,
                     inline: true,
                   })),
                 )

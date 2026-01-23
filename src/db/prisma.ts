@@ -165,7 +165,7 @@ export const addToBank = async (id: string, amount: number) => {
             coins: 0,
             bank: overflow,
             gems: {
-              increment: 20,
+              increment: 21,
             },
           }
         : { bank: 2_000_000_000 },
@@ -258,7 +258,10 @@ export const getTop5Richest = async () => {
       },
     })
   )
-    .sort((a, b) => (a.gems || b.gems ? b.gems - a.gems : b.total - a.total))
+    .sort(
+      (a, b) =>
+        b.gems * 100_000_000 + b.total - (a.gems * 100_000_000 + a.total),
+    )
     .slice(0, 6);
 };
 
