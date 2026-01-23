@@ -153,7 +153,7 @@ export const addToBank = async (id: string, amount: number) => {
       where: { id },
       data: should_get_gems
         ? {
-            coins: 1000,
+            coins: overflow,
             bank: 0,
             gems: {
               increment: 20,
@@ -161,6 +161,8 @@ export const addToBank = async (id: string, amount: number) => {
           }
         : { bank: 2_000_000_000 },
     });
+
+    if (!should_get_gems) await addCoins(id, overflow);
 
     await addToJackpot(tax + overflow);
 
