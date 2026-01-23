@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
-import { diffInDays, diffInMinutes } from "../utils/helpers.js";
+import { diffInMinutes } from "../utils/helpers.js";
 import moment from "moment";
 
 const connectionString = `${process.env.DATABASE_URL}`;
@@ -28,77 +28,69 @@ const getBankAmountWithTax = (amount: number) => {
 };
 
 export const addCoins = async (id: string, amount: number) => {
-  if (amount < 0) await addToJackpot(Math.abs(amount));
+  const current_data = await getUserCoins(id);
+  const new_data = { ...current_data };
 
-  const user = await prisma.user.upsert({
+  new_data.coins += amount;
+
+  if (new_data.coins > 100_000_000) {
+    new_data.bank += getBankAmountWithTax(new_data.coins - 100_000_000);
+    new_data.coins = 100_000_000;
+  }
+
+  if (new_data.bank > 2_000_000_000) {
+    new_data.coins = 0;
+    new_data.bank = 0;
+    new_data.gems += 20;
+  }
+
+  await prisma.user.upsert({
     select: {
       coins: true,
     },
-    update: {
-      coins: {
-        increment: amount,
-      },
-    },
+    update: new_data,
     create: {
       id,
-      coins: Math.max(0, amount),
+      ...new_data,
     },
     where: {
       id,
     },
   });
 
-  const newCoins = user.coins;
-
-  if (newCoins > 100_000_000) {
-    const overflow = newCoins - 100_000_000;
-
-    await prisma.user.update({
-      data: {
-        coins: 100_000_000,
-      },
-      where: {
-        id,
-      },
-    });
-    await addToBank(id, overflow);
-
-    return Math.abs(amount) - overflow;
-  }
-
-  if (newCoins < 0) {
-    const deficit = Math.abs(newCoins);
-
-    const bankData = await prisma.user.findUnique({
-      where: { id },
-      select: { bank: true },
-    });
-
-    if (!bankData || bankData.bank < deficit) {
-      await prisma.user.update({
-        where: { id },
-        data: { coins: 0 },
-      });
-      return Math.abs(amount) + deficit;
-    }
-
-    await prisma.user.update({
-      where: { id },
-      data: {
-        coins: 0,
-        bank: {
-          decrement: deficit,
-        },
-      },
-    });
-    return Math.abs(amount);
-  }
-
-  return Math.abs(amount);
+  return new_data.coins - current_data.coins;
 };
 
 export const takeCoins = async (id: string, amount: number) => {
-  return await addCoins(id, -amount);
+  await addToJackpot(Math.abs(amount));
+
+  const current_data = await getUserCoins(id);
+  const new_data = { ...current_data };
+
+  new_data.coins -= amount;
+
+  if (new_data.coins < 0) {
+    new_data.bank += new_data.coins;
+    new_data.coins = 0;
+  }
+
+  if (new_data.bank < 0) new_data.bank = 0;
+
+  await prisma.user.upsert({
+    select: {
+      coins: true,
+    },
+    update: new_data,
+    create: {
+      id,
+      ...new_data,
+    },
+    where: {
+      id,
+    },
+  });
+
+  return new_data.coins - current_data.coins;
 };
 
 export const getUserCoins = async (id: string) => {
@@ -129,72 +121,68 @@ export const hasEnoughCoins = async (id: string, min: number) => {
 export const addToBank = async (id: string, amount: number) => {
   if (amount === 0) return 0;
 
-  const finalAmount = getBankAmountWithTax(amount);
+  const current_data = await getUserCoins(id);
+  const new_data = { ...current_data };
 
-  const tax = amount - finalAmount;
+  new_data.bank += getBankAmountWithTax(amount);
 
-  const user = await prisma.user.upsert({
+  if (new_data.bank > 2_000_000_000) {
+    new_data.coins += new_data.bank - 2_000_000_000;
+    new_data.bank = 0;
+  }
+
+  if (new_data.coins > 100_000_000) {
+    new_data.coins = 0;
+    new_data.gems += 20;
+  }
+
+  await prisma.user.upsert({
     select: {
-      bank: true,
       coins: true,
     },
-    update: {
-      bank: {
-        increment: finalAmount,
-      },
-    },
+    update: new_data,
     create: {
       id,
-      bank: Math.max(0, finalAmount),
+      ...new_data,
     },
     where: {
       id,
     },
   });
 
-  const newBank = user.bank;
-
-  if (newBank > 2_000_000_000) {
-    const overflow = newBank - 2_000_000_000;
-    const should_get_gems = user.coins >= 100_000_000;
-
-    await prisma.user.update({
-      where: { id },
-      data: should_get_gems
-        ? {
-            coins: 0,
-            bank: overflow,
-            gems: {
-              increment: 21,
-            },
-          }
-        : { bank: 2_000_000_000 },
-    });
-
-    if (!should_get_gems) await addCoins(id, overflow);
-
-    await addToJackpot(tax + overflow);
-
-    return finalAmount - overflow;
-  }
-
-  if (newBank < 0) {
-    const deficit = Math.abs(newBank);
-    await prisma.user.update({
-      where: { id },
-      data: { bank: 0 },
-    });
-    await addToJackpot(tax + deficit);
-    return finalAmount + deficit;
-  }
-
-  if (tax > 0) await addToJackpot(tax);
-
-  return finalAmount;
+  return new_data.bank - current_data.bank;
 };
 
 export const takeFromBank = async (id: string, amount: number) => {
-  return await addToBank(id, -amount);
+  if (amount === 0) return 0;
+
+  const current_data = await getUserCoins(id);
+  const new_data = { ...current_data };
+
+  new_data.bank -= amount;
+
+  if (new_data.bank < 0) {
+    new_data.coins += amount;
+    new_data.bank = 0;
+  }
+
+  if (new_data.coins < 0) new_data.coins = 0;
+
+  await prisma.user.upsert({
+    select: {
+      coins: true,
+    },
+    update: new_data,
+    create: {
+      id,
+      ...new_data,
+    },
+    where: {
+      id,
+    },
+  });
+
+  return new_data.bank - current_data.bank;
 };
 
 export const addToJackpot = async (amount: number) => {

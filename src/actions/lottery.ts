@@ -142,7 +142,7 @@ export class Lottery {
     ) as TextChannel;
 
     const options: MessageCreateOptions | MessageEditOptions = {
-      content: "@everyone",
+      content: "",
       embeds: [
         new CustomEmbed()
           .setTitle(this.#question.question)

@@ -657,13 +657,11 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         const amount = interaction.options.getNumber("amount", true);
         const data = await getUserCoins(interaction.user.id);
 
-        if (data.coins < amount)
-          return await interaction.reply(
-            `You only have 🪙 ${data.coins.toLocaleString()} in your wallet!`,
-          );
-
         try {
-          const takenAmount = await takeCoins(interaction.user.id, amount);
+          const takenAmount = await takeCoins(
+            interaction.user.id,
+            Math.min(data.coins, amount),
+          );
           const depositedAmount = await addToBank(
             interaction.user.id,
             takenAmount,
@@ -697,23 +695,18 @@ client.on("interactionCreate", async (interaction: Interaction) => {
             "Your wallet is full! (Max: 🪙 100,000,000)",
           );
 
-        if (amount > wallet_space)
-          return await interaction.reply(
-            `Your wallet can only hold 🪙 ${wallet_space.toLocaleString()} more. Try withdrawing that amount or deposit some coins first.`,
-          );
-
         try {
-          const withdrawnAmount = await takeFromBank(
+          const withdrawn_amount = await takeFromBank(
             interaction.user.id,
-            amount,
+            Math.min(wallet_space, amount),
           );
-          const addedAmount = await addCoins(
+          const added_amount = await addCoins(
             interaction.user.id,
-            Math.abs(withdrawnAmount),
+            withdrawn_amount,
           );
 
           await interaction.reply(
-            `Withdrew 🪙 ${addedAmount.toLocaleString()} into your wallet!`,
+            `Withdrew 🪙 ${added_amount.toLocaleString()} into your wallet!`,
           );
         } catch (error) {
           await interaction.reply(
