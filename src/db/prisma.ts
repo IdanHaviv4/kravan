@@ -33,13 +33,14 @@ export const addCoins = async (id: string, amount: number) => {
 
   new_data.coins += amount;
 
-  if (new_data.coins > 100_000_000) {
+  const is_wallet_overflown = new_data.coins > 100_000_000;
+
+  if (is_wallet_overflown) {
     new_data.bank += getBankAmountWithTax(new_data.coins - 100_000_000);
     new_data.coins = 100_000_000;
   }
 
-  if (new_data.bank > 2_000_000_000) {
-    new_data.coins = 0;
+  if (new_data.bank > 2_000_000_000 && is_wallet_overflown) {
     new_data.bank = 0;
     new_data.gems += 20;
   }
@@ -126,13 +127,16 @@ export const addToBank = async (id: string, amount: number) => {
 
   new_data.bank += getBankAmountWithTax(amount);
 
-  if (new_data.bank > 2_000_000_000) {
+  const is_bank_overflown = new_data.bank > 2_000_000_000;
+
+  if (is_bank_overflown) {
     new_data.coins += new_data.bank - 2_000_000_000;
-    new_data.bank = 0;
+    new_data.bank = 2_000_000_000;
   }
 
-  if (new_data.coins > 100_000_000) {
-    new_data.coins = 0;
+  if (new_data.coins > 100_000_000 && is_bank_overflown) {
+    new_data.coins = 100_000_000;
+    new_data.bank = 0;
     new_data.gems += 20;
   }
 
