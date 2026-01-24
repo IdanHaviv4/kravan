@@ -847,6 +847,11 @@ client.on("messageCreate", async (message) => {
         await counting.handleMessage(message);
 
         break;
+
+      case Leveling.CHANNEL_ID:
+        if (message.author.id != Leveling.BOT_ID) return;
+
+        await Leveling.handleMessage(message);
     }
   } catch (e: any) {
     await message.reply(JSON.parse(e.message));
