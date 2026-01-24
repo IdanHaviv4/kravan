@@ -28,6 +28,8 @@ const getBankAmountWithTax = (amount: number) => {
 };
 
 export const addCoins = async (id: string, amount: number) => {
+  if (amount < 0) return await takeCoins(id, amount);
+
   const current_data = await getUserCoins(id);
   const new_data = { ...current_data };
 
@@ -63,6 +65,8 @@ export const addCoins = async (id: string, amount: number) => {
 };
 
 export const takeCoins = async (id: string, amount: number) => {
+  amount = Math.abs(amount);
+
   await addToJackpot(Math.abs(amount));
 
   const current_data = await getUserCoins(id);
