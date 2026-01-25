@@ -72,14 +72,7 @@ export const takeCoins = async (id: string, amount: number) => {
   const current_data = await getUserCoins(id);
   const new_data = { ...current_data };
 
-  new_data.coins -= amount;
-
-  if (new_data.coins < 0) {
-    new_data.bank += new_data.coins;
-    new_data.coins = 0;
-  }
-
-  if (new_data.bank < 0) new_data.bank = 0;
+  new_data.coins -= Math.min(amount, current_data.coins);
 
   await prisma.user.upsert({
     select: {

@@ -201,8 +201,7 @@ export class Gamble {
 
     delta = winnings - losses;
 
-    if (delta > 0) await addCoins(this.#interaction.user.id, delta);
-    else await takeCoins(this.#interaction.user.id, delta);
+    if (delta) await addCoins(this.#interaction.user.id, delta);
 
     embeds.push(
       new CustomEmbed()
