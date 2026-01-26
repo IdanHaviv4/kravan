@@ -193,7 +193,8 @@ const commands = [
     .addUserOption((option) =>
       option
         .setName("target")
-        .setDescription("mention the person u want to give the item to"),
+        .setDescription("mention the person u want to give the item to")
+        .setRequired(true),
     ),
 
   new SlashCommandBuilder()

@@ -3,16 +3,6 @@ import { CustomEmbed } from "../utils/embed.js";
 export enum ItemId {
   ALARM = 1,
   BOUQUET,
-  SHIELD_1,
-  SHIELD_2,
-  SHIELD_3,
-  SHIELD_4,
-  SHIELD_5,
-  SHIELD_6,
-  SHIELD_7,
-  SHIELD_8,
-  SHIELD_9,
-  SHIELD_10,
 }
 
 export class Store {
@@ -28,7 +18,7 @@ export class Store {
       name: "🚨 Alarm",
       description:
         "Get an alarm the next time someone tries to steal from you (works for only 1 steal opportunity)",
-      amount: 15,
+      amount: 100,
     })
     .set(ItemId.BOUQUET, {
       name: "💐 Bouquet",
