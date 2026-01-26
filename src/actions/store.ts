@@ -38,12 +38,15 @@ export class Store {
     });
 
   static getStoreEmbed() {
-    return new CustomEmbed().setColor(0x8f34eb).setFields(
-      Object.entries(this.ITEMS).map(([_, item]) => ({
-        name: `${item.name} (🪙 ${item.amount.toLocaleString()})`,
-        value: `- ${item.description}`,
-        inline: true,
-      })),
-    );
+    return new CustomEmbed()
+      .setDescription("Buy cool stuff here lol")
+      .setColor(0x8f34eb)
+      .setFields(
+        Array.from(this.ITEMS.values()).map((item) => ({
+          name: `${item.name} (🪙 ${item.amount.toLocaleString()})`,
+          value: `${item.description}`,
+          inline: true,
+        })),
+      );
   }
 }

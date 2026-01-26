@@ -53,6 +53,11 @@ export const client = new Client({
 
 export const current_gambles: Map<string, Gamble> = new Map();
 
+const items_as_string_option = Array.from(Store.ITEMS).map(([id, data]) => ({
+  name: data.name,
+  value: id.toString(),
+}));
+
 const commands = [
   new SlashCommandBuilder()
     .setName("kraa")
@@ -162,12 +167,7 @@ const commands = [
       option
         .setName("item")
         .setDescription("The item to buy")
-        .setChoices(
-          ...Array.from(Store.ITEMS).map(([id, data]) => ({
-            name: data.name,
-            value: id.toString(),
-          })),
-        )
+        .setChoices(...items_as_string_option)
         .setRequired(true),
     )
     .addNumberOption((option) =>
@@ -176,6 +176,22 @@ const commands = [
         .setDescription("The number of copies from the item")
         .setMinValue(1)
         .setMaxValue(50),
+    ),
+
+  new SlashCommandBuilder()
+    .setName("give")
+    .setDescription("Give an item to someone")
+    .addStringOption((option) =>
+      option
+        .setName("item")
+        .setDescription("The item to give")
+        .setChoices(...items_as_string_option)
+        .setRequired(true),
+    )
+    .addUserOption((option) =>
+      option
+        .setName("target")
+        .setDescription("mention the person u want to give the item to"),
     ),
 
   new SlashCommandBuilder()
@@ -832,6 +848,12 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 
         break;
       }
+
+      // case "give": {
+      //   const item = parseInt(interaction.options.getString("item", true))
+      //   const target = interaction.options.getUser("target", true);
+
+      // }
     }
   } catch (e: any) {
     await interaction.reply(JSON.parse(e.message));
