@@ -83,7 +83,7 @@ export class Gamble {
         new ButtonBuilder()
           .setCustomId("all")
           .setLabel("Reveal All")
-          .setStyle(ButtonStyle.Secondary),
+          .setStyle(ButtonStyle.Primary),
       ];
 
       if (is_first)
@@ -120,18 +120,7 @@ export class Gamble {
             .setColor(0x345eeb),
         ],
         components: [
-          new ActionRowBuilder<ButtonBuilder>().addComponents(
-            ...[
-              new ButtonBuilder()
-                .setCustomId("next")
-                .setLabel("Reveal Next")
-                .setStyle(ButtonStyle.Primary),
-              new ButtonBuilder()
-                .setCustomId("all")
-                .setLabel("Reveal All")
-                .setStyle(ButtonStyle.Secondary),
-            ],
-          ),
+          new ActionRowBuilder<ButtonBuilder>().addComponents(...components),
         ],
       });
     };
