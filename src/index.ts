@@ -480,6 +480,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         break;
 
       case "duel":
+        if (current_gambles.has(interaction.user.id)) return;
+
         await validateNotInJail(interaction.user.id);
 
         new Duel(interaction);
@@ -540,6 +542,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         break;
 
       case "donate": {
+        if (current_gambles.has(interaction.user.id)) return;
+
         await validateNotInJail(interaction.user.id);
 
         const from = interaction.user;
@@ -608,6 +612,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         break;
 
       case "buy": {
+        if (current_gambles.has(interaction.user.id)) return;
+
         await validateNotInJail(interaction.user.id);
 
         const value = parseInt(interaction.options.getString("item", true));
@@ -676,6 +682,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       }
 
       case "deposit": {
+        if (current_gambles.has(interaction.user.id)) return;
+
         await validateNotInJail(interaction.user.id);
 
         const amount = interaction.options.getNumber("amount", true);
@@ -703,6 +711,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       }
 
       case "withdraw": {
+        if (current_gambles.has(interaction.user.id)) return;
+
         await validateNotInJail(interaction.user.id);
 
         const amount = interaction.options.getNumber("amount", true);
@@ -741,6 +751,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
       }
 
       case "lottery": {
+        if (current_gambles.has(interaction.user.id)) return;
+
         await validateNotInJail(interaction.user.id);
 
         await lottery.handleInteraction(interaction);
@@ -754,6 +766,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
         break;
 
       case "trap":
+        if (current_gambles.has(interaction.user.id)) return;
+
         await validateNotInJail(interaction.user.id);
 
         await counting.trap(interaction);
